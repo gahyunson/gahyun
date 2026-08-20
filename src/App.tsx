@@ -29,9 +29,9 @@ export default function App() {
       <main id="main-content">
         <Hero data={personal} />
         <About data={about} />
-        <Skills data={skills} />
-        <Experience data={experience} />
         <Projects data={projects} />
+        <Experience data={experience} />
+        <Skills data={skills} />
         <Education data={education} />
         <Contact data={personal} />
       </main>

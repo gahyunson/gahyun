@@ -21,7 +21,6 @@ const GithubIcon = () => (
 
 export default function Projects({ data }: ProjectsProps) {
   const featured = data.filter(p => p.featured)
-  const others = data.filter(p => !p.featured)
 
   return (
     <section
@@ -37,7 +36,7 @@ export default function Projects({ data }: ProjectsProps) {
         />
 
         {/* Featured projects */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
           {featured.map(project => (
             <Card key={project.id} hover padding="md" className="flex flex-col">
               <div className="flex flex-1 flex-col">
@@ -51,16 +50,35 @@ export default function Projects({ data }: ProjectsProps) {
                   {project.summary}
                 </p>
 
-                {/* Contribution */}
-                <div className="mt-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    <span className="mr-1" aria-hidden="true">🙋</span>
-                    나의 기여
-                  </p>
-                  <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
-                    {project.contribution}
-                  </p>
-                </div>
+                {project.highlights ? (
+                  <div className="mt-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                      대표 작업
+                    </p>
+                    <ul className="mt-2 space-y-2.5">
+                      {project.highlights.map(highlight => (
+                        <li key={highlight.title} className="border-l-2 border-brand-200 pl-3 dark:border-brand-800">
+                          <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                            {highlight.title}
+                          </p>
+                          <p className="mt-0.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                            {highlight.description}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="mt-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                      <span className="mr-1" aria-hidden="true">🙋</span>
+                      나의 기여
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+                      {project.contribution}
+                    </p>
+                  </div>
+                )}
 
                 {/* Tech stack */}
                 <div className="mt-3 flex flex-wrap gap-1.5" aria-label="기술 스택">
@@ -103,7 +121,7 @@ export default function Projects({ data }: ProjectsProps) {
         </div>
 
         {/* Other projects */}
-        {others.length > 0 && (
+        {/* {others.length > 0 && (
           <>
             <h3 className="mt-10 mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
               기타 프로젝트
@@ -156,7 +174,7 @@ export default function Projects({ data }: ProjectsProps) {
               ))}
             </div>
           </>
-        )}
+        )} */}
       </div>
     </section>
   )

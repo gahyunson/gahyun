@@ -1,4 +1,5 @@
-import { useState, FormEvent } from 'react'
+import emailjs from '@emailjs/browser'
+import { useState, type FormEvent } from 'react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import SectionTitle from '../ui/SectionTitle'
@@ -50,6 +51,8 @@ const links = [
 export default function Contact({ data }: ContactProps) {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [isSending, setIsSending] = useState(false)
+  const [error, setError] = useState('')
 
   const getHref = (key: (typeof links)[number]['key']) => {
     if (key === 'email') return `mailto:${data.email}`
@@ -61,10 +64,57 @@ export default function Contact({ data }: ContactProps) {
     return data[key].replace(/^https?:\/\//, '')
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // UI-only demo — no actual submission
-    setSubmitted(true)
+
+    if (!formState.name.trim() || !formState.email.trim() || !formState.message.trim()) {
+      setError('이름, 이메일, 메시지를 모두 입력해주세요.')
+      return
+    }
+
+    setIsSending(true)
+    setError('')
+
+    try {
+      emailjs.init({
+        publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        // Do not allow headless browsers
+        // blockHeadless: true,
+        // blockList: {
+        //   // Block the suspended emails
+        //   list: ['foo@emailjs.com', 'bar@emailjs.com'],
+        //   // The variable contains the email address
+        //   watchVariable: 'userEmail',
+        // },
+        limitRate: {
+          // Set the limit rate for the application
+          id: 'app',
+          // Allow 1 request per 10s
+          throttle: 10000,
+        },
+      });
+      const data = {
+        serviceID: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        templateID: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams: {
+          name: formState.name.trim(),
+          email: formState.email.trim(),
+          message: formState.message.trim(),
+        },
+      }
+      const response = await emailjs.send(
+        data.serviceID,
+        data.templateID,
+        data.templateParams,
+      )
+      console.log(response)
+      setSubmitted(true)
+    } catch (error) {
+      console.error(error)
+      setError('메시지를 보내지 못했습니다. 잠시 후 다시 시도해주세요.')
+    } finally {
+      setIsSending(false)
+    }
   }
 
   return (
@@ -122,14 +172,17 @@ export default function Contact({ data }: ContactProps) {
                 </p>
                 <button
                   type="button"
-                  onClick={() => { setSubmitted(false); setFormState({ name: '', email: '', message: '' }) }}
+                  onClick={() => {
+                    setSubmitted(false)
+                    setFormState({ name: '', email: '', message: '' })
+                  }}
                   className="mt-4 text-sm text-brand-600 hover:underline dark:text-brand-400"
                 >
                   다시 보내기
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate aria-label="연락 양식">
+              <form onSubmit={handleSubmit} noValidate aria-label="연락 양식" aria-busy={isSending}>
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -173,13 +226,19 @@ export default function Contact({ data }: ContactProps) {
                       rows={5}
                       value={formState.message}
                       onChange={e => setFormState(s => ({ ...s, message: e.target.value }))}
-                      placeholder="안녕하세요! 연락드리고 싶어서요..."
+                      placeholder="안녕하세요, 즐거운 제안을 드리고 싶습니다!"
                       className="mt-1.5 block w-full resize-none rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-brand-400"
                     />
                   </div>
 
-                  <Button type="submit" variant="primary" size="md" className="w-full justify-center">
-                    메시지 보내기
+                  {error && (
+                    <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+                      {error}
+                    </p>
+                  )}
+
+                  <Button type="submit" variant="primary" size="md" className="w-full justify-center" disabled={isSending}>
+                    {isSending ? '전송 중...' : '메시지 보내기'}
                   </Button>
                 </div>
               </form>

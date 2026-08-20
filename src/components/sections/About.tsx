@@ -20,9 +20,9 @@ export default function About({ data }: AboutProps) {
           subtitle="저에 대해 소개합니다"
         />
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <>
           {/* Paragraphs */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             {data.paragraphs.map((p, i) => (
               <p
                 key={i}
@@ -31,10 +31,10 @@ export default function About({ data }: AboutProps) {
                 {p}
               </p>
             ))}
-          </div>
+          </div> */}
 
           {/* Strength cards */}
-          <div className="flex flex-col gap-4">
+          <div className="grid gap-4 md:grid-cols-2">
             {data.strengths.map((s, i) => (
               <Card key={i} hover padding="md">
                 <div className="flex items-start gap-4">
@@ -54,7 +54,7 @@ export default function About({ data }: AboutProps) {
               </Card>
             ))}
           </div>
-        </div>
+        </>
       </div>
     </section>
   )

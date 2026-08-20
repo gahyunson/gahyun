@@ -13,7 +13,7 @@ export interface ExperienceItem {
   id: string
   company: string
   role: string
-  period: string
+  period: { start: string; end: string }
   location: string
   description: string
   technologies: string[]
@@ -26,6 +26,10 @@ export interface ProjectItem {
   title: string
   summary: string
   contribution: string
+  highlights?: {
+    title: string
+    description: string
+  }[]
   technologies: string[]
   demoUrl?: string
   githubUrl?: string
@@ -52,6 +56,8 @@ export interface ResumeData {
     linkedin: string
     blog: string
     resumePdfUrl: string
+    resumeWordUrl: string
+    coreTechnologies: string[]
   }
   about: {
     paragraphs: string[]

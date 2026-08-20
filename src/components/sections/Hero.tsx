@@ -34,7 +34,7 @@ export default function Hero({ data }: HeroProps) {
         <div className="animate-fade-in">
           {/* Greeting chip */}
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 dark:border-brand-800/50 dark:bg-brand-900/20 dark:text-brand-300">
-            <span className="h-2 w-2 rounded-full bg-brand-500 animate-pulse" aria-hidden="true" />
+            {/* <span className="h-2 w-2 rounded-full bg-brand-500 animate-pulse" aria-hidden="true" /> */}
             안녕하세요, 만나서 반갑습니다!
           </div>
 
@@ -52,6 +52,18 @@ export default function Hero({ data }: HeroProps) {
             {data.tagline}
           </p>
 
+          <div className="mt-6 flex flex-wrap items-center gap-2" aria-label="핵심 기술">
+            <span className="mr-1 text-sm font-medium text-gray-500 dark:text-gray-400">핵심 기술</span>
+            {data.coreTechnologies.map(technology => (
+              <span
+                key={technology}
+                className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700 dark:bg-brand-900/30 dark:text-brand-300"
+              >
+                {technology}
+              </span>
+            ))}
+          </div>
+
           {/* CTA buttons */}
           <div className="mt-8 flex flex-wrap gap-3" role="group" aria-label="외부 링크">
             <Button
@@ -59,7 +71,7 @@ export default function Hero({ data }: HeroProps) {
               href={data.github}
               target="_blank"
               rel="noopener noreferrer"
-              variant="primary"
+              variant="outline"
               size="lg"
               icon={<GithubIcon />}
             >
@@ -75,17 +87,30 @@ export default function Hero({ data }: HeroProps) {
             >
               Email
             </Button>
-
-            <Button
-              as="a"
-              href={data.resumePdfUrl}
-              download
-              variant="outline"
-              size="lg"
-              icon={<DownloadIcon />}
-            >
-              Resume PDF
-            </Button>
+            <div className="inline-flex" role="group" aria-label="Resume 다운로드">
+              <Button
+                as="a"
+                href={data.resumePdfUrl}
+                download
+                variant="primary"
+                size="lg"
+                icon={<DownloadIcon />}
+                className="rounded-r-none"
+              >
+                Resume PDF
+              </Button>
+              <Button
+                as="a"
+                href={data.resumeWordUrl}
+                download
+                variant="primary"
+                size="lg"
+                icon={<DownloadIcon />}
+                className="rounded-l-none border-l border-white/30"
+              >
+                Word
+              </Button>
+            </div>
           </div>
 
           {/* Scroll hint */}

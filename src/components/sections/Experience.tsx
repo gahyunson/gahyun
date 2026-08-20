@@ -7,6 +7,13 @@ interface ExperienceProps {
 }
 
 export default function Experience({ data }: ExperienceProps) {
+  const calculateMonths = (start: string, end: string) => {
+    const workDuration = Math.floor((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24 * 30))
+    const years = Math.floor(workDuration / 12)
+    const months = workDuration % 12
+
+    return `${years > 0 ? `${years}년 ` : ''}${months > 0 ? `${months}개월` : ''}`.trim()
+  }
   return (
     <section
       id="experience"
@@ -49,7 +56,9 @@ export default function Experience({ data }: ExperienceProps) {
                       </p>
                     </div>
                     <div className="text-right">
-                      <time className="text-sm text-gray-500 dark:text-gray-400">{item.period}</time>
+                      <time className="text-sm text-gray-500 dark:text-gray-400 tracking-wide">
+                        {item.period.start} – {item.period.end} ({calculateMonths(item.period.start, item.period.end)})
+                      </time>
                       <p className="text-xs text-gray-400 dark:text-gray-500">{item.location}</p>
                     </div>
                   </div>

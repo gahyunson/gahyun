@@ -27,13 +27,13 @@ const sizes = {
 const base =
   'inline-flex items-center justify-center rounded-lg font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
 
-export default function Button({ variant = 'primary', size = 'md', icon, children, as, ...rest }: Props) {
-  const className = `${base} ${variants[variant]} ${sizes[size]}`
+export default function Button({ variant = 'primary', size = 'md', icon, children, as, className, ...rest }: Props) {
+  const buttonClassName = `${base} ${variants[variant]} ${sizes[size]} ${className ?? ''}`
 
   if (as === 'a') {
     const { href, ...anchorRest } = rest as AnchorProps
     return (
-      <a href={href} className={className} {...anchorRest}>
+      <a href={href} className={buttonClassName} {...anchorRest}>
         {icon && <span aria-hidden="true">{icon}</span>}
         {children}
       </a>
@@ -41,7 +41,7 @@ export default function Button({ variant = 'primary', size = 'md', icon, childre
   }
 
   return (
-    <button className={className} {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}>
+    <button className={buttonClassName} {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {icon && <span aria-hidden="true">{icon}</span>}
       {children}
     </button>
